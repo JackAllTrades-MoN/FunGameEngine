@@ -1,0 +1,21 @@
+(copy_files# parsing/*.ml{,i})
+(copy_files# driver/*.ml{,i})
+
+(library
+ (name fgecommon)
+ (wrapped false)
+ (libraries core)
+ (modules asttypes location longident ast parser lexer printer)
+ (modules_without_implementation asttypes))
+
+(executable
+  (name replmain)
+  (modes byte)
+  (libraries core ANSITerminal fgecommon)
+  (modules replmain))
+
+;(excutable
+;  (name main)
+;  (modes byte)
+;  (libraries core fgecommon)
+;  (modules main))

@@ -1,0 +1,16 @@
+; (library
+;  (name parsing)
+;  (public_name fge.parsing)
+;  (libraries core)
+;  (modules asttypes location longident ast parser lexer)
+;  (synopsis "parsing for fge")
+;  (modules_without_implementation asttypes))
+
+
+(ocamllex (modules lexer))
+;(menhir (modules parser))
+
+(rule
+ (targets parser.ml parser.mli)
+ (deps    parser.mly)
+ (action  (run %{bin:menhir} %{deps})))
