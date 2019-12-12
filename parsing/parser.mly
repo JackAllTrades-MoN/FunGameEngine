@@ -8,7 +8,7 @@
       Location.loc_end = endpos;
     }
 
-  let _syntax_error () =
+  let syntax_error () =
     raise Syntaxerr.Escape_error
 
 (*
@@ -89,10 +89,13 @@ structure_item:
          pstr_loc = Location.dummy
        }
      }
+  | CONTEXT _lid = LIDENT EQUAL _ctx = context
+    { syntax_error () }
 
 context:
-  | lid = LIDENT
-    { Ast.Pctx_ident(Location.emb_dummy @@ Longident.lid lid) }
+  | uid = UIDENT
+    { Ast.Pctx_ident(Location.emb_dummy @@ Longident.lid uid) }
+  | _lid = LIDENT { syntax_error () }
 
 
 ident:

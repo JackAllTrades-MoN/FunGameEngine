@@ -44,17 +44,17 @@ rule token = parse
   | blank + { print_endline "tok: blank"; token lexbuf }
   | newline { print_endline "tok: EOL"; update_loc lexbuf None 1 false 0; EOL }
   | lowercase identchar * as name
-      {  print_endline "tok: id or keyword";
-         match Hashtbl.Poly.find keyword_table name with
-           None -> LIDENT name
-         | Some t -> t }
+      {match Hashtbl.Poly.find keyword_table name with
+           None -> print_endline "tok: lident"; LIDENT name
+         | Some t -> print_endline "tok: keyword"; t }
+  | uppercase identchar * as name { print_endline "tok: uident"; UIDENT name }
   | "#" { HASH }
 (*      { print_endline "tok: #";
         let at_beginning_of_line pos = (pos.pos_cnum = pos.pos_bol) in
         if not (at_beginning_of_line lexbuf.lex_start_p)
         then HASH
         else try directive lexbuf with Failure _ -> HASH } *)
-  | "=" { EQUAL }
+  | "=" { print_endline "tok: equal"; EQUAL }
   | ";;" { print_endline "tok:SEMISEMI"; SEMISEMI }
   | eof { EOF }
   | (_ as illegal_char)
