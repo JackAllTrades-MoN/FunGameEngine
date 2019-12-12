@@ -70,3 +70,25 @@ and action_binding =
     pab_expr: action list;
     pab_loc: Location.t;
   }
+
+
+type toplevel_phrase =
+  | Ptop_def of structure
+  | Ptop_dir of toplevel_directive
+
+and toplevel_directive =
+  {
+    pdir_name : string loc;
+    pdir_arg : directive_argument option;
+    pdir_loc : Location.t;
+  }
+
+and directive_argument =
+  {
+    pdira_desc : directive_argument_desc;
+    pdira_loc : Location.t;
+  }
+
+and directive_argument_desc =
+  | Pdir_string of string
+  | Pdir_bool of bool

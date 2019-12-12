@@ -5,7 +5,15 @@
  (name fgecommon)
  (wrapped false)
  (libraries core)
- (modules asttypes location longident ast parser lexer printer)
+ (modules
+    asttypes
+    location
+    longident
+    ast
+    parser
+    lexer
+    printer
+    syntaxerr)
  (modules_without_implementation asttypes))
 
 (executable
