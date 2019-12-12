@@ -1,5 +1,6 @@
 (copy_files# parsing/*.ml{,i})
 (copy_files# driver/*.ml{,i})
+(copy_files# transpile/*.ml{,i})
 
 (library
  (name fgecommon)
@@ -16,10 +17,16 @@
     syntaxerr)
  (modules_without_implementation asttypes))
 
+(library
+  (name fgetranspile)
+  (wrapped false)
+  (libraries core fgecommon)
+  (modules toocaml))
+
 (executable
   (name replmain)
   (modes byte)
-  (libraries core ANSITerminal fgecommon)
+  (libraries core ANSITerminal fgecommon fgetranspile)
   (modules replmain))
 
 ;(excutable
