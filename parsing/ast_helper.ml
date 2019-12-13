@@ -14,6 +14,12 @@ module Exp = struct
   let mk ?(loc = !default_loc) d = {
       pexp_desc = d;
       pexp_loc = loc;}
+
+  let case lhs ?guard rhs = {
+      pc_lhs = lhs;
+      pc_guard = guard;
+      pc_rhs = rhs;
+    }
 end
 
 module Str = struct

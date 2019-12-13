@@ -127,7 +127,18 @@
 /* macros */
 %inline mkrhs(symb): s = symb { mkrhs s $sloc }
 %inline mkexp(symb): s = symb { mkexp ~loc:$sloc s }
+%inline mkpat(symb): s = symb { mkpat ~loc:$sloc s }
 %inline mk_directive_arg(symb): s = symb { mk_directive_arg ~loc:$sloc s }
+
+reversed_preceded_or_separated_nonempty_llist(delimiter, X):
+  | ioption(delimiter) x = X { [x] }
+  | xs = reversed_preceded_or_separated_nonempty_llist(delimiter, X)
+    delimiter
+    x = X
+      { x :: xs }
+
+%inline preceded_or_separated_nonempty_llist(delimiter, X):
+  xs = rev(reversed_preceded_or_separated_nonempty_llist(delimiter, X)) { xs }
 
 toplevel_phrase:
   | s = structure SEMISEMI { Ast.Ptop_def s }
@@ -187,6 +198,13 @@ arg_expr:
 
 expr:
   | arg_expr { $1 }
+  | MATCH seq_expr WITH match_cases { Pexp_match ($2, $4) }
+
+%inline match_cases:
+  xs = preceded_or_separated_nonempty_llist(BAR, match_case) { xs }
+
+match_case:
+  | pattern MINUSGREATER seq_expr { Exp.case $1 $3 }
 
 let_bindings:
   | lb = let_binding { lb }
@@ -216,6 +234,9 @@ rec_flag:
 constant:
   | INT { let (n, m) = $1 in Pconst_integer (n, m) }
   | STRING { let (s, strloc, d) = $1 in Pconst_string (s, strloc, d) }
+
+pattern:
+  | UNDERSCORE { mkpat ~loc:$sloc (Ppat_any) }
 
 toplevel_directive:
   HASH dir = mkrhs(ident)

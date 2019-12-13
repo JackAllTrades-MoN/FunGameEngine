@@ -28,7 +28,7 @@ action on Game action_title () : bool =
 action on Game action_main st_main () : bool =
   print_screen (screen_name st_main)
   match st_main with
-  |	YouWin | YouLose -> wait_enter GameOver
+  | YouWin | YouLose -> wait_enter GameOver
   | Ready ->
     ev <- fetch_event ()
     match ev with

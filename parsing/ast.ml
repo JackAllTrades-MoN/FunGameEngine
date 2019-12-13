@@ -50,6 +50,12 @@ and constant =
   | Pconst_string of string * Location.t * string option
   | Pconst_float of string * char option
 
+and 'a case = {
+    pc_lhs: pattern;
+    pc_guard: expression option;
+    pc_rhs: 'a;
+  }
+
 and pattern =
   {
     ppat_desc: pattern_desc;
@@ -61,10 +67,11 @@ and pattern_desc =
   | Ppat_var of string loc
   | Ppat_constant of constant
 
+(*
 and 'a case =
   {
     body : 'a;
-  }
+  } *)
 
 and value_binding =
   {
