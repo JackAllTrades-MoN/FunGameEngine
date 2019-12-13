@@ -83,12 +83,14 @@
 %token HASHOP
 %token <string * char option> INT
 %token LET
+%token MATCH
 %token REC
 %token SEMISEMI
 %token <string * Location.t * string option> STRING
 %token TRUE
 %token <string> LIDENT
 %token <string> UIDENT
+%token WITH
 %token EOL
 %token EOF
 

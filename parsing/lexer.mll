@@ -48,6 +48,8 @@ let keyword_table =
     "context", CONTEXT;
     "let", LET;
     "rec", REC;
+    "match", MATCH;
+    "with", WITH;
   ] in
   Hashtbl.Poly.of_alist_exn ~size:(List.length ls) ls
 }
