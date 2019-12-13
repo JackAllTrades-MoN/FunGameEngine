@@ -1,13 +1,13 @@
 open Core
 
-let skip_comment f lexbuf =
+let rec skip_comment f lexbuf =
   match f lexbuf with
-  | Parser.COMMENT _ -> f lexbuf
+  | Parser.COMMENT _ -> skip_comment f lexbuf
   | tok -> tok
 
-let skip_eol f lexbuf =
+let rec skip_eol f lexbuf =
   match f lexbuf with
-  | Parser.EOL -> f lexbuf
+  | Parser.EOL -> skip_eol f lexbuf
   | tok -> tok
 
 let main filename () =
