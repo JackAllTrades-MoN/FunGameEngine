@@ -29,6 +29,12 @@
   (libraries core ANSITerminal fgecommon fgetranspile)
   (modules replmain))
 
+(executable
+  (name fgec)
+  (modes byte)
+  (libraries core fgecommon fgetranspile)
+  (modules fgec))
+
 ;(excutable
 ;  (name main)
 ;  (modes byte)

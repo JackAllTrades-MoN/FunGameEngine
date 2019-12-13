@@ -32,6 +32,7 @@
 %token COLON
 %token COMMA
 */
+%token <string * Location.t> COMMENT
 %token CONTEXT
 //%token DOT
 %token EQUAL

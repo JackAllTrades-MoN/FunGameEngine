@@ -1,0 +1,55 @@
+(* stub implementation *)
+context Game = GameTempl.Dummy
+(* production environment *)
+(* context Game = GameTempl.Make (Env.Windows) *)
+
+let game_res me op =
+  match me, op with
+  | ReleaseKeyR, ReleaseKeyC -> YouWin
+  | ReleaseKeyR, ReleaseKeyP -> YouLose
+  | ReleaseKeyC, ReleaseKeyP -> YouWin
+  | ReleaseKeyC, ReleaseKeyR -> YouLose
+  | ReleaseKeyP, ReleaseKeyR -> YouWin
+  | ReleaseKeyP, ReleaseKeyC -> YouLose
+  | _ -> Draw
+
+action on Game wait_enter next_state : bool =
+  ev <- fetch_event ()
+  match ev with
+  | ReleaseKeyEnter ->
+	  setState next_state
+	  return false
+  | _ -> return false
+
+action on Game action_title () : bool =
+  print_screen "title"
+  wait_enter (GameMain Ready)
+
+action on Game action_main st_main () : bool =
+  print_screen (screen_name st_main)
+  match st_main with
+  |	YouWin | YouLose -> wait_enter GameOver
+  | Ready ->
+    ev <- fetch_event ()
+    match ev with
+    | ReleaseKeyR | ReleaseKeyC | ReleaseKeyP ->
+      op <- Rnd.choose [ReleaseKeyR; ReleaseKeyC; ReleaseKeyP]
+      setState (game_res ev op)
+      return false
+    | _ -> return false
+  
+action on Game action_over : unit -> bool =
+  print_screen "over"
+  ev <- fetch_event ()
+  match ev with
+  | ReleaseKeyEnter -> return true
+  | _ -> return false
+
+action on Game rec main : unit -> unit =
+  st <- Game.getState ()
+  let act = match st with
+	  | GameTitle -> action_title
+	  | GameMain st_main -> action_main st_main
+	  | GameOver  -> action_over in
+  quit <- act ();
+  if quit then Game.Success else main ()

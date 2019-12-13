@@ -25,6 +25,24 @@ let update_loc lexbuf file line absolute chars =
     pos_bol = pos.pos_cnum - chars;
   }
 
+let string_buffer = Buffer.create 256
+let reset_string_buffer () = Buffer.reset string_buffer
+let get_stored_string () = Buffer.contents string_buffer
+
+let store_striing s = Buffer.add_string string_buffer s
+let store_lexeme lexbuf = store_striing (Lexing.lexeme lexbuf)
+
+let comment_start_loc = ref []
+
+let wrap_comment_lexer comment lexbuf =
+  let start_loc = Location.curr lexbuf in
+  comment_start_loc := [start_loc];
+  reset_string_buffer ();
+  let end_loc = comment lexbuf in
+  let s = get_stored_string () in
+  reset_string_buffer ();
+  s, { start_loc with Location.loc_end = end_loc.Location.loc_end }
+
 let keyword_table =
   let ls = [
     "context", CONTEXT;
@@ -56,9 +74,26 @@ rule token = parse
         else try directive lexbuf with Failure _ -> HASH } *)
   | "=" { print_endline "tok: equal"; EQUAL }
   | ";;" { print_endline "tok:SEMISEMI"; SEMISEMI }
+  | "(*" { let s, loc = wrap_comment_lexer comment lexbuf in COMMENT (s, loc) }
   | eof { EOF }
   | (_ as illegal_char)
       { error lexbuf (Illegal_character illegal_char) }
+
+and comment = parse
+    "(*"
+      { comment_start_loc := (Location.curr lexbuf) :: !comment_start_loc;
+        store_lexeme lexbuf;
+        comment lexbuf
+      }
+  | "*)"
+      { match !comment_start_loc with
+        | [] -> assert false
+        | [_] -> comment_start_loc := []; Location.curr lexbuf
+        | _ :: l -> comment_start_loc := l;
+                    store_lexeme lexbuf;
+                    comment lexbuf
+      }
+  | _ { store_lexeme lexbuf; comment lexbuf }
 
 (*
 and directive = parse
