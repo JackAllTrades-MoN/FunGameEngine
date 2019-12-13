@@ -72,6 +72,7 @@ rule token = parse
         if not (at_beginning_of_line lexbuf.lex_start_p)
         then HASH
         else try directive lexbuf with Failure _ -> HASH } *)
+  | "." { DOT }
   | "=" { print_endline "tok: equal"; EQUAL }
   | ";;" { print_endline "tok:SEMISEMI"; SEMISEMI }
   | "(*" { let s, loc = wrap_comment_lexer comment lexbuf in COMMENT (s, loc) }

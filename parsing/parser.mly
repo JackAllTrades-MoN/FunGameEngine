@@ -34,7 +34,7 @@
 */
 %token <string * Location.t> COMMENT
 %token CONTEXT
-//%token DOT
+%token DOT
 %token EQUAL
 %token FALSE
 %token HASH
@@ -94,8 +94,7 @@ structure_item:
     { syntax_error () }
 
 context:
-  | uid = UIDENT
-    { Ast.Pctx_ident(Location.emb_dummy @@ Longident.lid uid) }
+  | clid = cont_longident { Ast.Pctx_ident(Location.emb_dummy clid) }
   | _lid = LIDENT { syntax_error () }
 
 
@@ -103,6 +102,9 @@ ident:
     uid = UIDENT { uid }
   | lid = LIDENT { lid }
 
+cont_longident:
+  | uid = UIDENT { Longident.Lident uid }
+  | clid = cont_longident DOT uid = UIDENT { Longident.Ldot(clid, uid) }
 
 toplevel_directive:
   HASH dir = mkrhs(ident)
