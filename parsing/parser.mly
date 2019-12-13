@@ -74,6 +74,7 @@
 %token COMMA
 */
 %token AND
+%token ACTION
 %token BAR
 %token <string * Location.t> COMMENT
 %token CONTEXT

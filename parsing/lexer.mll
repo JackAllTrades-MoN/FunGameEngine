@@ -45,6 +45,7 @@ let wrap_comment_lexer comment lexbuf =
 
 let keyword_table =
   let ls = [
+    "action", ACTION;
     "context", CONTEXT;
     "let", LET;
     "rec", REC;
