@@ -38,7 +38,18 @@ and str_of_constant = function
 
 and str_of_expression exp =
   match exp.pexp_desc with
-  | Pexp_ident _lid -> "unimplemented"
+  | Pexp_ident lid -> Longident.str_of @@ lid.txt
+  | Pexp_constant constant -> str_of_constant constant
+  | Pexp_ite (cond, t, f) ->
+     begin
+       match f with
+       | None -> Printf.sprintf "if %s then %s"
+                   (str_of_expression cond) (str_of_expression t)
+       | Some f -> Printf.sprintf "if %s then %s else %s"
+                     (str_of_expression cond)
+                     (str_of_expression t)
+                     (str_of_expression f)
+     end
   | _ -> "unimplemented"
 
 and str_of_rec_flag = function

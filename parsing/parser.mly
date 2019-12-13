@@ -59,7 +59,10 @@
     { lbs with lbs_bindings = lb :: lbs.lbs_bindings}
 
   let val_of_let_bindings ~loc lbs =
-    let bindings = [] in (* TODO: stub *)
+    let bindings =
+      List.map (fun lb ->
+                 Vb.mk ~loc:lb.lb_loc lb.lb_pattern lb.lb_expression)
+               lbs.lbs_bindings in
     mkstr ~loc (Pstr_value(lbs.lbs_rec, List.rev bindings))
 
   let mkpatvar ~loc name =

@@ -1,3 +1,7 @@
 (* simple example with arithmetics *)
 
 let const = 1
+
+let add = 1 + 2
+
+let add2 = (1 + 2) + 3
