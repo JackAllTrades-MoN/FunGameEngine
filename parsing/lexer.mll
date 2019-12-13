@@ -94,6 +94,8 @@ rule token = parse
   | "." { DOT }
   | "=" { print_endline "tok: equal"; EQUAL }
   | "|" { BAR }
+  | "," { COMMA }
+  | "->" { MINUSGREATER }
   | ";;" { print_endline "tok:SEMISEMI"; SEMISEMI }
   | "(*" { let s, loc = wrap_comment_lexer comment lexbuf in COMMENT (s, loc) }
   | eof { EOF }

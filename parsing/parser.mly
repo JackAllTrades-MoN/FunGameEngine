@@ -76,6 +76,7 @@
 %token AND
 %token ACTION
 %token BAR
+%token COMMA
 %token <string * Location.t> COMMENT
 %token CONTEXT
 %token DOT
@@ -86,6 +87,7 @@
 %token <string * char option> INT
 %token LET
 %token MATCH
+%token MINUSGREATER
 %token REC
 %token SEMISEMI
 %token <string * Location.t * string option> STRING
