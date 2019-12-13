@@ -1,0 +1,3 @@
+(* simple example with arithmetics *)
+
+let const = 1

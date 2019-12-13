@@ -60,6 +60,19 @@ let blank = [' ' '\009' '\012']
 
 let ident = (lowercase | uppercase) identchar*
 
+let decimal_literal =
+  ['0'-'9'] ['0'-'9' '_']*
+let hex_digit =
+  ['0'-'9' 'A'-'F' 'a'-'f']
+let hex_literal =
+  '0' ['x' 'X'] ['0'-'9' 'A'-'F' 'a'-'f']['0'-'9' 'A'-'F' 'a'-'f' '_']*
+let oct_literal =
+  '0' ['o' 'O'] ['0'-'7'] ['0'-'7' '_']*
+let bin_literal =
+  '0' ['b' 'B'] ['0'-'1'] ['0'-'1' '_']*
+let int_literal =
+  decimal_literal | hex_literal | oct_literal | bin_literal
+
 rule token = parse
   | blank + { print_endline "tok: blank"; token lexbuf }
   | newline { print_endline "tok: EOL"; update_loc lexbuf None 1 false 0; EOL }
@@ -68,6 +81,7 @@ rule token = parse
            None -> print_endline "tok: lident"; LIDENT name
          | Some t -> print_endline "tok: keyword"; t }
   | uppercase identchar * as name { print_endline "tok: uident"; UIDENT name }
+  | int_literal as lit { INT (lit, None) }
   | "#" { HASH }
 (*      { print_endline "tok: #";
         let at_beginning_of_line pos = (pos.pos_cnum = pos.pos_bol) in
