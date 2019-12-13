@@ -85,6 +85,7 @@ rule token = parse
          | Some t -> print_endline "tok: keyword"; t }
   | uppercase identchar * as name { print_endline "tok: uident"; UIDENT name }
   | int_literal as lit { INT (lit, None) }
+  | "_" { UNDERSCORE }
   | "#" { HASH }
 (*      { print_endline "tok: #";
         let at_beginning_of_line pos = (pos.pos_cnum = pos.pos_bol) in
@@ -96,6 +97,8 @@ rule token = parse
   | "|" { BAR }
   | "," { COMMA }
   | "->" { MINUSGREATER }
+  | "("  { LPAREN }
+  | ")"  { RPAREN }
   | ";;" { print_endline "tok:SEMISEMI"; SEMISEMI }
   | "(*" { let s, loc = wrap_comment_lexer comment lexbuf in COMMENT (s, loc) }
   | eof { EOF }

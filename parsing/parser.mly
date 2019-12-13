@@ -86,14 +86,17 @@
 %token HASHOP
 %token <string * char option> INT
 %token LET
+%token LPAREN
+%token <string> LIDENT
 %token MATCH
 %token MINUSGREATER
 %token REC
+%token RPAREN
 %token SEMISEMI
 %token <string * Location.t * string option> STRING
 %token TRUE
-%token <string> LIDENT
 %token <string> UIDENT
+%token UNDERSCORE
 %token WITH
 %token EOL
 %token EOF
@@ -161,6 +164,10 @@ ident:
 val_ident:
   | lid = LIDENT { lid }
 
+/* TODO: stub */
+val_longident:
+  | val_ident { Longident.Lident $1 }
+
 %inline let_ident:
   vi = val_ident { mkpatvar ~loc:$sloc vi }
 
@@ -171,19 +178,15 @@ cont_longident:
 
 /* TODO: stub */
 seq_expr:
-  | exp = expr { exp }
+  | exp = mkexp(expr) { exp }
 
-/* TODO: stub  */
-expr:
-  | se = simple_expr { se }
-
-/* TODO: stub */
-simple_expr:
-  | mkexp(simple_expr_) { $1 }
-
-/* TODO: stub */
-%inline simple_expr_:
+arg_expr:
+  | mkrhs(val_longident)    { Pexp_ident $1 }
   | constant { Pexp_constant $1 }
+  | LPAREN expr RPAREN { $2 }
+
+expr:
+  | arg_expr { $1 }
 
 let_bindings:
   | lb = let_binding { lb }
