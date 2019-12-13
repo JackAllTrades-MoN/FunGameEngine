@@ -10,6 +10,7 @@
     asttypes
     location
     longident
+    ast_helper
     ast
     parser
     lexer

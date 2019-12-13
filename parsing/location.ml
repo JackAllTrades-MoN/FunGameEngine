@@ -16,6 +16,12 @@ type 'a loc = {
     loc : t;
   }
 
+let in_file name =
+  let loc = { dummy_pos with pos_fname = name } in
+  { loc_start = loc; loc_end = loc }
+
+let none = in_file "_none_"
+
 let dummy = {loc_start=dummy_pos; loc_end=dummy_pos}
 
 let emb_dummy txt = {txt = txt; loc = dummy}

@@ -46,6 +46,8 @@ let wrap_comment_lexer comment lexbuf =
 let keyword_table =
   let ls = [
     "context", CONTEXT;
+    "let", LET;
+    "rec", REC;
   ] in
   Hashtbl.Poly.of_alist_exn ~size:(List.length ls) ls
 }

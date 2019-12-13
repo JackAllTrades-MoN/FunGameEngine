@@ -23,8 +23,14 @@ and context =
   | Pctx_ident of Longident.t loc
 
 and expression =
+  {
+    pexp_desc: expression_desc;
+    pexp_loc: Location.t;
+  }
+
+and expression_desc =
   | Pexp_ident of Longident.t loc
-  | Pexp_const of constant
+  | Pexp_constant of constant
   | Pexp_let of rec_flag * value_binding list * expression
   | Pexp_app of expression * (arg_label * expression) list
   | Pexp_match of expression * expression case list
@@ -39,9 +45,9 @@ and action =
   | Pact_exp of expression
 
 and constant =
-  | Pconst_int of string * char option
+  | Pconst_integer of string * char option
   | Pconst_char of char
-  | Pconst_string of string
+  | Pconst_string of string * Location.t * string option
   | Pconst_float of string * char option
 
 and pattern =
@@ -50,7 +56,10 @@ and pattern =
     ppat_loc: Location.t;
   }
 
-and pattern_desc = PDammy
+and pattern_desc =
+  | Ppat_any
+  | Ppat_var of string loc
+  | Ppat_constant of constant
 
 and 'a case =
   {
